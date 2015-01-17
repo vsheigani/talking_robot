@@ -3,13 +3,23 @@
 #include <string.h>
 #include <stdlib.h>
 #include "sqlite3.h"
+#include "callbackh.h"
 
 
 
 sqlite3 *db;
-   int  rc;
+int  rc;
+int id;
+int cc=0;
+char Fname[100];
+char Lname[100];
+int age;
+char MyValue[100];
+char MyField[100];
+char pass[100];
+char str1[100];
 
-
+/*
 static int callback_find(void *NotUsed, int argc, char **argv, char **azColName)
 
 {
@@ -20,13 +30,14 @@ static int callback_find(void *NotUsed, int argc, char **argv, char **azColName)
             printf("Smith:%s\n\n", argv[i] ? argv[i] : "NULL");
     }
 
-   //printf("\n");
+   
    return 0;
 }
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 
 {
+
    int i;
    
 
@@ -38,11 +49,9 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
    printf("\n");
    return 0;
 }
-
+*/
   void create_db(char db_name[])
   {
-   // sqlite3 *db;
-  // int  rc;
 
    rc = sqlite3_open(db_name, &db);
    if( rc )
@@ -56,6 +65,41 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
       }
    }
 
+  void auth(){
+       char *zErrMsg = 0;
+
+    printf("What is your id:\n");
+    scanf("%d", &id);
+    sprintf(str1, "SELECT * FROM profile");
+
+     char *sqlstr1= str1;
+
+
+   rc = sqlite3_exec(db, sqlstr1, callback_find, 0, &zErrMsg);
+   if( rc != SQLITE_OK )
+   {
+      fprintf(stderr, "SQL error: %s\n", zErrMsg);
+      sqlite3_free(zErrMsg);
+   }
+  else{
+  if(cc==0){
+    printf("Hello Amin\n");
+  }
+  //  printf("Please enter your password:\n");
+  //  scanf("%s", pass);
+    
+  }
+  }
+
+
+  void learn(){
+
+    printf("What is your first name?\n");
+    scanf("%s", Fname);
+
+    printf("How old are you?\n");
+    scanf("%s", Lname);
+  }
 
    void select_data(char q[])
    {
@@ -68,18 +112,12 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
       strcat(sql_string,q);
       strcat(sql_string,"\"");
 
-     // printf("%s\n", sql_string);
-
-
-
-//   sprintf(sql_string,"SELECT answer FROM negos WHERE question= "%s"",q);
-
    char *sql= sql_string;
 
 
    /* Execute SQL statement */
 
-   rc = sqlite3_exec(db, sql, callback_find, 0, &zErrMsg);
+   rc = sqlite3_exec(db, sql, callback_print, 0, &zErrMsg);
    if( rc != SQLITE_OK )
    {
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -101,9 +139,10 @@ char q[512];
 create_db(db_name);
 system("clear");
 while(strcmp(q,"bye") != 0) {
-    printf("You:");
-    scanf("%s",q);
-    select_data(q);
+  auth();
+  //  printf("You:");
+   // scanf("%s",q);
+    //select_data(q);
 }
 printf("Smith:bye\n");
 getchar();
